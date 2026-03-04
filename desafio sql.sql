@@ -73,6 +73,7 @@ where not exists( --Checks the first level is not child of another Part
 	from BillOfMaterials
 	where ChildPartID = Parent.PartID
 )
+and Parent.PartName = 'Personal Computer'
 
 union all select Parent.PartName as FinalProduct,--Level 2
 	Child2.PartName as Component,
@@ -86,6 +87,7 @@ inner join BillOfMaterials as BOM2
 	ON Child1.PartID = BOM2.ParentPartID 
 inner join Parts as Child2
 	ON BOM2.ChildPartID = Child2.PartID
+where Parent.PartName = 'Personal Computer'
 
 union all select Parent.PartName as FinalProduct,--Level 3
 	Child3.PartName as Component,
@@ -102,6 +104,9 @@ inner join Parts as Child2
 inner join BillOfMaterials as BOM3 
 	on Child2.PartID = BOM3.ParentPartID 
 inner join Parts as Child3
-	on BOM3.ChildPartID = Child3.PartID) as BOMLevels
+	on BOM3.ChildPartID = Child3.PartID
+where Parent.PartName = 'Personal Computer'
+) as BOMLevels
 group by Component
 
+drop table BillOfMaterials, Parts
